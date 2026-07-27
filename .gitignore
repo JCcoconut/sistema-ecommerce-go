@@ -1,0 +1,22 @@
+# Archivos de macOS
+.DS_Store
+
+# Configuraciones de editores
+.vscode/
+.idea/
+
+# Binarios y compilados
+bin/
+dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Archivos de pruebas y cobertura de Go
+*.test
+*.out
+coverage.out
+
+# Registros
+*.log
