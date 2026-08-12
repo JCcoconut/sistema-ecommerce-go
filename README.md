@@ -1,6 +1,6 @@
 # Sistema de gestión de e-commerce en Go
 
-Avance significativo del proyecto académico correspondiente a la Unidad 3. El programa funciona en consola y modela el catálogo, carrito, promociones, pedidos, clientes, direcciones, proveedores e inventario de **AudioCyber Store**.
+Avance significativo del proyecto correspondiente a la Unidad 3. El programa funciona en consola y modela el catálogo, carrito, promociones, pedidos, clientes, direcciones, proveedores e inventario de **AudioCyber Store**.
 
 ## Funcionalidades demostrables
 
