@@ -3,8 +3,17 @@ package modelo
 
 import (
 	"errors"
+	"net/mail"
 	"strings"
 )
+
+func validarCorreo(email string) bool {
+	if len(email) > 254 || strings.ContainsAny(email, "\r\n") {
+		return false
+	}
+	direccion, err := mail.ParseAddress(email)
+	return err == nil && direccion.Address == email
+}
 
 // Proveedor representa la empresa que abastece un producto.
 // Sus campos son privados para aplicar encapsulación.
@@ -18,10 +27,10 @@ func NuevoProveedor(nombre, email string) (Proveedor, error) {
 	nombre = strings.TrimSpace(nombre)
 	email = strings.TrimSpace(email)
 
-	if nombre == "" {
+	if nombre == "" || len(nombre) > 100 {
 		return Proveedor{}, errors.New("el nombre del proveedor es obligatorio")
 	}
-	if !strings.Contains(email, "@") {
+	if !validarCorreo(email) {
 		return Proveedor{}, errors.New("el correo del proveedor no es válido")
 	}
 

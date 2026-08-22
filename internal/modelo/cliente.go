@@ -17,7 +17,7 @@ func NuevaDireccionEntrega(ciudad, sector, referencia string) (DireccionEntrega,
 	ciudad = strings.TrimSpace(ciudad)
 	sector = strings.TrimSpace(sector)
 	referencia = strings.TrimSpace(referencia)
-	if ciudad == "" || sector == "" {
+	if ciudad == "" || sector == "" || len(ciudad) > 80 || len(sector) > 80 || len(referencia) > 160 {
 		return DireccionEntrega{}, errors.New("la ciudad y el sector son obligatorios")
 	}
 	return DireccionEntrega{ciudad: ciudad, sector: sector, referencia: referencia}, nil
@@ -38,10 +38,10 @@ type Cliente struct {
 func NuevoCliente(nombre, email string, direccion DireccionEntrega) (Cliente, error) {
 	nombre = strings.TrimSpace(nombre)
 	email = strings.TrimSpace(email)
-	if nombre == "" {
+	if nombre == "" || len(nombre) > 100 {
 		return Cliente{}, errors.New("el nombre del cliente es obligatorio")
 	}
-	if !strings.Contains(email, "@") {
+	if !validarCorreo(email) {
 		return Cliente{}, errors.New("el correo del cliente no es válido")
 	}
 	if direccion.Ciudad() == "" || direccion.Sector() == "" {

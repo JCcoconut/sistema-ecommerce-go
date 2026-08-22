@@ -2,7 +2,14 @@ package modelo
 
 import (
 	"errors"
+	"fmt"
+	"math"
 	"strings"
+)
+
+var (
+	ErrProductoInvalido  = errors.New("producto inválido")
+	ErrStockInsuficiente = errors.New("stock insuficiente")
 )
 
 // Producto representa un artículo comercializado por la tienda.
@@ -27,14 +34,14 @@ func NuevoProducto(
 	nombre = strings.TrimSpace(nombre)
 	categoria = strings.TrimSpace(categoria)
 
-	if id == "" || nombre == "" || categoria == "" {
-		return nil, errors.New("el ID, nombre y categoría son obligatorios")
+	if id == "" || nombre == "" || categoria == "" || len(id) > 32 || len(nombre) > 120 || len(categoria) > 60 {
+		return nil, fmt.Errorf("%w: el ID, nombre y categoría son obligatorios", ErrProductoInvalido)
 	}
-	if precio <= 0 {
-		return nil, errors.New("el precio debe ser mayor que cero")
+	if precio <= 0 || math.IsNaN(precio) || math.IsInf(precio, 0) {
+		return nil, fmt.Errorf("%w: el precio debe ser mayor que cero", ErrProductoInvalido)
 	}
 	if stock < 0 {
-		return nil, errors.New("el stock no puede ser negativo")
+		return nil, fmt.Errorf("%w: el stock no puede ser negativo", ErrProductoInvalido)
 	}
 	if proveedor.Nombre() == "" || proveedor.Email() == "" {
 		return nil, errors.New("el proveedor del producto no es válido")
@@ -48,6 +55,31 @@ func NuevoProducto(
 		stock:     stock,
 		proveedor: proveedor,
 	}, nil
+}
+
+// Actualizar aplica cambios controlados sin exponer los campos privados.
+// El ID y el stock se gestionan por operaciones específicas para conservar
+// la identidad del producto y evitar ajustes de inventario accidentales.
+func (p *Producto) Actualizar(nombre, categoria string, precio float64, proveedor Proveedor) error {
+	if p == nil {
+		return fmt.Errorf("%w: no se puede actualizar un producto nulo", ErrProductoInvalido)
+	}
+	nombre = strings.TrimSpace(nombre)
+	categoria = strings.TrimSpace(categoria)
+	if nombre == "" || categoria == "" || len(nombre) > 120 || len(categoria) > 60 {
+		return fmt.Errorf("%w: el nombre y la categoría son obligatorios", ErrProductoInvalido)
+	}
+	if precio <= 0 || math.IsNaN(precio) || math.IsInf(precio, 0) {
+		return fmt.Errorf("%w: el precio debe ser mayor que cero", ErrProductoInvalido)
+	}
+	if proveedor.Nombre() == "" || proveedor.Email() == "" {
+		return fmt.Errorf("%w: el proveedor no es válido", ErrProductoInvalido)
+	}
+	p.nombre = nombre
+	p.categoria = categoria
+	p.precio = precio
+	p.proveedor = proveedor
+	return nil
 }
 
 // Los siguientes métodos usan receptor por valor porque solo consultan datos.
@@ -73,7 +105,7 @@ func (p *Producto) DescontarStock(cantidad int) error {
 		return errors.New("no se puede actualizar un producto nulo")
 	}
 	if !p.Disponible(cantidad) {
-		return errors.New("stock insuficiente para completar la operación")
+		return fmt.Errorf("%w: disponibles %d, solicitadas %d", ErrStockInsuficiente, p.stock, cantidad)
 	}
 	p.stock -= cantidad
 	return nil
