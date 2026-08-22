@@ -196,9 +196,7 @@ La referencia completa y ejemplos `curl` están en [docs/API.md](docs/API.md).
 - [Informe final](INFORME_FINAL.md)
 - [Servicios REST](docs/API.md)
 - [Plan, evidencias y resultados de pruebas](docs/PRUEBAS.md)
-- [Guion para la demostración en video](DEMO_VIDEO.md)
 - [Visualización del futuro](docs/VISION_FUTURO.md)
-- [Guía para publicar el proyecto en GitHub](GUIA_GITHUB_FINAL.md)
 
 ## Dependencias
 
