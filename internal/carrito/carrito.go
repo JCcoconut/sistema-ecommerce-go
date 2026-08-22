@@ -53,6 +53,18 @@ func (i *Item) Aumentar(cantidad int) error {
 	return nil
 }
 
+// CambiarCantidad reemplaza la cantidad de una línea tras validar el stock.
+func (i *Item) CambiarCantidad(cantidad int) error {
+	if i == nil || i.producto == nil {
+		return errors.New("el ítem no es válido")
+	}
+	if !i.producto.Disponible(cantidad) {
+		return errors.New("la cantidad debe ser positiva y no superar el stock")
+	}
+	i.cantidad = cantidad
+	return nil
+}
+
 // Carrito combina un map para localizar ítems y un slice para conservar el orden.
 type Carrito struct {
 	items map[string]*Item
@@ -95,6 +107,9 @@ func (c *Carrito) Agregar(producto *modelo.Producto, cantidad int) error {
 
 // Eliminar retira el elemento del map y reconstruye el orden del carrito.
 func (c *Carrito) Eliminar(productoID string) error {
+	if c == nil {
+		return errors.New("el carrito no está inicializado")
+	}
 	productoID = strings.ToUpper(strings.TrimSpace(productoID))
 	if _, existe := c.items[productoID]; !existe {
 		return ErrItemNoEncontrado
@@ -109,6 +124,19 @@ func (c *Carrito) Eliminar(productoID string) error {
 	}
 	c.orden = nuevoOrden
 	return nil
+}
+
+// CambiarCantidad actualiza una línea ya existente.
+func (c *Carrito) CambiarCantidad(productoID string, cantidad int) error {
+	if c == nil {
+		return errors.New("el carrito no está inicializado")
+	}
+	productoID = strings.ToUpper(strings.TrimSpace(productoID))
+	item, existe := c.items[productoID]
+	if !existe {
+		return ErrItemNoEncontrado
+	}
+	return item.CambiarCantidad(cantidad)
 }
 
 // Items devuelve copias por valor para proteger el slice interno.

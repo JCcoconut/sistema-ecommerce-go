@@ -49,3 +49,31 @@ func TestClienteContieneDireccionAnidada(t *testing.T) {
 		t.Fatalf("ciudad inesperada: %s", cliente.Direccion().Ciudad())
 	}
 }
+
+func TestActualizarProductoTableDriven(t *testing.T) {
+	proveedor, err := NuevoProveedor("Proveedor", "ventas@proveedor.ec")
+	if err != nil {
+		t.Fatal(err)
+	}
+	producto, err := NuevoProducto("P001", "Inicial", "Categoría", 10, 5, proveedor)
+	if err != nil {
+		t.Fatal(err)
+	}
+	casos := []struct {
+		nombre     string
+		precio     float64
+		deseaError bool
+	}{
+		{nombre: "Actualizado", precio: 25.5, deseaError: false},
+		{nombre: "Sin precio", precio: 0, deseaError: true},
+		{nombre: "", precio: 10, deseaError: true},
+	}
+	for _, caso := range casos {
+		t.Run(caso.nombre, func(t *testing.T) {
+			err := producto.Actualizar(caso.nombre, "Nueva", caso.precio, proveedor)
+			if (err != nil) != caso.deseaError {
+				t.Fatalf("error=%v, deseaError=%v", err, caso.deseaError)
+			}
+		})
+	}
+}

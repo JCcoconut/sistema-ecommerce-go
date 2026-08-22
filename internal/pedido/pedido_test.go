@@ -76,3 +76,48 @@ func TestClosureGeneraIDsConsecutivos(t *testing.T) {
 		t.Fatal("el closure no conservó correctamente el contador")
 	}
 }
+
+func TestTransicionesDeEstadoTableDriven(t *testing.T) {
+	casos := []struct {
+		actual, nuevo string
+		valido        bool
+	}{
+		{EstadoConfirmado, EstadoEnviado, true},
+		{EstadoConfirmado, EstadoCancelado, true},
+		{EstadoEnviado, EstadoEntregado, true},
+		{EstadoEntregado, EstadoEnviado, false},
+		{EstadoCancelado, EstadoConfirmado, false},
+	}
+	for _, caso := range casos {
+		t.Run(caso.actual+"_a_"+caso.nuevo, func(t *testing.T) {
+			producto, cliente := datosPedido(t)
+			carro := carrito.NuevoCarrito()
+			if err := carro.Agregar(producto, 1); err != nil {
+				t.Fatal(err)
+			}
+			orden, err := NuevoPedido("PED-001", time.Now(), cliente, carro, nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if caso.actual == EstadoEnviado || caso.actual == EstadoEntregado {
+				if err := orden.CambiarEstado(EstadoEnviado); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if caso.actual == EstadoEntregado {
+				if err := orden.CambiarEstado(EstadoEntregado); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if caso.actual == EstadoCancelado {
+				if err := orden.CambiarEstado(EstadoCancelado); err != nil {
+					t.Fatal(err)
+				}
+			}
+			err = orden.CambiarEstado(caso.nuevo)
+			if (err == nil) != caso.valido {
+				t.Fatalf("error=%v, válido=%v", err, caso.valido)
+			}
+		})
+	}
+}

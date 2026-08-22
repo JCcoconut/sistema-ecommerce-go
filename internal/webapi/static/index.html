@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demo académica de un e-commerce desarrollado en Go">
+  <title>AudioCyber Store</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="#inicio">AudioCyber <span>Store</span></a>
+      <div class="nav-links">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#carrito">Carrito <strong id="badge-carrito">0</strong></a>
+        <a href="#pedidos">Pedidos</a>
+      </div>
+    </nav>
+    <section id="inicio" class="hero-content">
+      <div>
+        <p class="eyebrow">PROYECTO FINAL · GO + REST + JSON</p>
+        <h1>Tecnología para crear, conectar y avanzar.</h1>
+        <p>Una tienda académica completa: catálogo, compras, inventario, persistencia, concurrencia y facturación simulada.</p>
+        <a class="button primary" href="#catalogo">Explorar productos</a>
+      </div>
+      <div class="hero-card" aria-label="Estado del servidor">
+        <span class="pulse"></span>
+        <strong>API activa</strong>
+        <small id="estado-api">Comprobando servidor…</small>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section id="catalogo" class="section">
+      <div class="section-head">
+        <div><p class="eyebrow">CATÁLOGO</p><h2>Productos destacados</h2></div>
+        <label class="search">Buscar <input id="buscar" type="search" maxlength="80" placeholder="Nombre o categoría"></label>
+      </div>
+      <div id="productos" class="products" aria-live="polite"></div>
+    </section>
+
+    <section id="carrito" class="section two-columns">
+      <div class="panel">
+        <div class="section-head compact"><div><p class="eyebrow">COMPRA</p><h2>Tu carrito</h2></div></div>
+        <div id="items-carrito" class="cart-list"></div>
+        <form id="form-cupon" class="inline-form">
+          <label for="cupon">Cupón</label>
+          <input id="cupon" name="cupon" placeholder="GO15" maxlength="20" required>
+          <button class="button secondary" type="submit">Aplicar</button>
+        </form>
+        <div id="totales" class="totals"></div>
+      </div>
+
+      <div class="panel checkout">
+        <p class="eyebrow">CHECKOUT</p><h2>Datos de entrega</h2>
+        <form id="form-compra" class="form-grid">
+          <label>Nombre<input name="nombre" maxlength="80" required></label>
+          <label>Correo<input name="email" type="email" maxlength="120" required></label>
+          <label>Ciudad<input name="ciudad" maxlength="80" required></label>
+          <label>Sector<input name="sector" maxlength="80" required></label>
+          <label class="full">Referencia<input name="referencia" maxlength="160"></label>
+          <button class="button primary full" type="submit">Confirmar pedido</button>
+        </form>
+        <p class="legal">La factura generada es una simulación académica sin validez tributaria. No se solicitan ni almacenan datos de tarjetas.</p>
+      </div>
+    </section>
+
+    <section id="pedidos" class="section two-columns">
+      <div class="panel">
+        <p class="eyebrow">HISTORIAL</p><h2>Pedidos registrados</h2>
+        <button id="actualizar-pedidos" class="button secondary" type="button">Actualizar historial</button>
+        <div id="lista-pedidos" class="records"></div>
+      </div>
+      <div class="panel">
+        <p class="eyebrow">INVENTARIO</p><h2>Alerta de bajo stock</h2>
+        <p>Consulta realizada por el servicio <code>GET /api/productos/bajo-stock</code>.</p>
+        <div id="bajo-stock" class="records"></div>
+      </div>
+    </section>
+
+    <section id="resultado" class="section" hidden>
+      <div class="success-panel">
+        <p class="eyebrow">COMPRA COMPLETADA</p>
+        <h2 id="resultado-titulo">Pedido confirmado</h2>
+        <pre id="resultado-json"></pre>
+      </div>
+    </section>
+  </main>
+
+  <div id="mensaje" class="toast" role="status" aria-live="polite" hidden></div>
+  <footer>AudioCyber Store · Proyecto académico de Programación Orientada a Objetos · 2026</footer>
+  <script src="/app.js" defer></script>
+</body>
+</html>

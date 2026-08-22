@@ -8,7 +8,7 @@ import (
 )
 
 func productoPrueba(t *testing.T) *modelo.Producto {
-	t.Helper() // marca esta función como un helper para que los errores se reporten en la línea de la prueba que la llamó
+	t.Helper()
 	proveedor, err := modelo.NuevoProveedor("Proveedor", "ventas@proveedor.ec")
 	if err != nil {
 		t.Fatal(err)

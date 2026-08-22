@@ -10,8 +10,9 @@ import (
 
 var (
 	// ErrProductoNoEncontrado permite identificar este error con errors.Is.
-	ErrProductoNoEncontrado = errors.New("producto no encontrado")
-	ErrProductoDuplicado    = errors.New("el producto ya existe")
+	ErrProductoNoEncontrado   = errors.New("producto no encontrado")
+	ErrProductoDuplicado      = errors.New("el producto ya existe")
+	ErrCatalogoNoInicializado = errors.New("el catálogo no está inicializado")
 )
 
 // Buscador define el comportamiento mínimo de un catálogo consultable.
@@ -47,8 +48,11 @@ func NuevoCatalogo(productos []*modelo.Producto) (*Catalogo, error) {
 
 // Agregar usa receptor por puntero porque modifica el map y el orden del catálogo.
 func (c *Catalogo) Agregar(producto *modelo.Producto) error {
-	if c == nil || producto == nil {
-		return errors.New("el catálogo y el producto deben existir")
+	if c == nil {
+		return ErrCatalogoNoInicializado
+	}
+	if producto == nil {
+		return errors.New("el producto debe existir")
 	}
 	if _, existe := c.productos[producto.ID()]; existe {
 		return ErrProductoDuplicado
@@ -56,6 +60,40 @@ func (c *Catalogo) Agregar(producto *modelo.Producto) error {
 	c.productos[producto.ID()] = producto
 	c.orden = append(c.orden, producto.ID())
 	return nil
+}
+
+// Eliminar retira un producto y conserva consistente el slice de orden.
+func (c *Catalogo) Eliminar(id string) error {
+	if c == nil {
+		return ErrCatalogoNoInicializado
+	}
+	id = strings.ToUpper(strings.TrimSpace(id))
+	if _, existe := c.productos[id]; !existe {
+		return ErrProductoNoEncontrado
+	}
+	delete(c.productos, id)
+	nuevoOrden := make([]string, 0, len(c.orden)-1)
+	for _, actual := range c.orden {
+		if actual != id {
+			nuevoOrden = append(nuevoOrden, actual)
+		}
+	}
+	c.orden = nuevoOrden
+	return nil
+}
+
+// BajoStock filtra productos mediante un recorrido sobre el slice ordenado.
+func (c Catalogo) BajoStock(limite int) []modelo.Producto {
+	if limite < 0 {
+		limite = 0
+	}
+	resultado := make([]modelo.Producto, 0)
+	for _, producto := range c.Listar() {
+		if producto.Stock() <= limite {
+			resultado = append(resultado, producto)
+		}
+	}
+	return resultado
 }
 
 // BuscarPorID usa el map para recuperar un producto en forma directa.

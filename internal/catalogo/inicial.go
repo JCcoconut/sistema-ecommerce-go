@@ -23,12 +23,12 @@ func CrearInicial() (*Catalogo, error) {
 		stock                 int
 		proveedor             modelo.Proveedor
 	}{
-		{"P001", "Teclado mecánico", "Periféricos", 65.90, 16, proveedorDigital},
-		{"P002", "Mouse inalámbrico", "Periféricos", 28.50, 22, proveedorDigital},
-		{"P003", "Audífonos de estudio", "Audio", 89.99, 12, proveedorAudio},
-		{"P004", "Micrófono USB", "Audio", 74.25, 7, proveedorAudio},
-		{"P005", "Hub USB-C", "Accesorios", 39.80, 24, proveedorDigital},
-		{"P006", "Soporte para laptop", "Accesorios", 32.00, 14, proveedorDigital},
+		{"P001", "Teclado mecánico", "Periféricos", 65.90, 8, proveedorDigital},
+		{"P002", "Mouse inalámbrico", "Periféricos", 28.50, 12, proveedorDigital},
+		{"P003", "Audífonos de estudio", "Audio", 89.99, 6, proveedorAudio},
+		{"P004", "Micrófono USB", "Audio", 74.25, 5, proveedorAudio},
+		{"P005", "Hub USB-C", "Accesorios", 39.80, 10, proveedorDigital},
+		{"P006", "Soporte para laptop", "Accesorios", 32.00, 7, proveedorDigital},
 	}
 
 	productos := make([]*modelo.Producto, 0, len(datos))

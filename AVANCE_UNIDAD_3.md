@@ -1,4 +1,6 @@
-# Avance significativo — Unidad 3
+# Evidencia histórica del avance — Unidad 3
+
+> Este archivo conserva el estado del proyecto antes de incorporar la API REST, persistencia, concurrencia y pruebas finales. Para la entrega vigente consulte [README.md](README.md) e [INFORME_FINAL.md](INFORME_FINAL.md).
 
 ## Objetivo del avance
 
